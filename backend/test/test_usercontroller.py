@@ -36,6 +36,17 @@ def test_get_user_db_failure():
         controller.get_user_by_email('unique@test.com')
     assert exc_info.type == Exception
 
+@pytest.mark.parametrize('email', ['example@test.com', 'common.format@test.com', 'FirstName.LastName@TestTest.com', 
+    'x@test.com', 'long-local-with-hyphens@and.subdomains.com', 'some.name+tag+tag@test.com',
+    'sur/name@test.com', 'admin@test', '" "@test.com', '"very.(),:;<>[]\".VERY.\"very@\\ \"very\".strange"@unusual.test.com'])
+def test_valid_email(email):
+    expected_result = {'id': 'user1', 'email': email}
+    mocked_db = mock.MagicMock()
+    mocked_db.find.return_value = [{'id': 'user1', 'email': email}]
+    controller = UserController(dao=mocked_db)
+    res = controller.get_user_by_email(email)
+    assert res == expected_result
+
 @pytest.mark.parametrize('email', ['abc.test.com', 'a@b@c@test.com', '123', 't"o(o)s,p:e;c<i>a[l\k]l@test.com', 'no"quotes"allowed@test.com',
     'no spaces"and\quotes@test.com', 'even\ escaped\"chars\\arent@test.com', '1234567890123456789012345678901234567890123456789012345678901234+x@test.com',
     'no.underscores@are_allowed_here.com'])
@@ -45,14 +56,3 @@ def test_invalid_email(email):
     with pytest.raises(ValueError) as exc_info:
         controller.get_user_by_email(email)
     assert exc_info.type == ValueError
-
-@pytest.mark.parametrize('email', ['example@email.com', 'very.common@example.com', 'FirstName.LastName@EasierReading.org', 
-    'x@example.com', 'long.email-address-with-hyphens@and.subdomains.example.com', 'user.name+tag+sorting@example.com',
-    'name/surname@example.com', 'admin@example', '" "@example.org', '"very.(),:;<>[]\".VERY.\"very@\\ \"very\".unusual"@strange.example.com'])
-def test_valid_email(email):
-    expected_result = {'id': 'user1', 'email': email}
-    mocked_db = mock.MagicMock()
-    mocked_db.find.return_value = [{'id': 'user1', 'email': email}]
-    controller = UserController(dao=mocked_db)
-    res = controller.get_user_by_email(email)
-    assert res == expected_result
