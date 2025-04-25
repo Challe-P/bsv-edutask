@@ -12,6 +12,17 @@ services:
       - "27017:27017"
     command: mongod --bind_ip_all
 
+  test_db:
+    image: mongo
+    container_name: edutask-mongodb-test
+    environment:
+      - MONGO_INITDB_DATABASE=rootDb
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+      - "7357:27017"
+    command: mongod --bind_ip_all
+
   backend:
     build: ./backend
     container_name: edutask-backend
