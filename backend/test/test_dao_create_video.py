@@ -24,7 +24,7 @@ def test_create_video_no_url():
 types_except_string = [item for item in types.items() if item[0] != 'string']
 
 @pytest.mark.parametrize("_, value", types_except_string)
-def test_invalid_types(_, value):
+def test_url_invalid_types(_, value):
     test_dao = DAO('video')
     test_video = {
         'url': value

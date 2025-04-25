@@ -88,7 +88,7 @@ def test_create_user_not_unique():
 types_except_string = [item for item in types.items() if item[0] != 'string']
 
 @pytest.mark.parametrize("_, value", types_except_string)
-def test_firstName_types(_, value):
+def test_firstName_invalid_types(_, value):
     test_dao = DAO('user')
     test_user = {
         'lastName': 'Aro',
@@ -100,7 +100,7 @@ def test_firstName_types(_, value):
     assert exc_info.type == WriteError
 
 @pytest.mark.parametrize("_, value", types_except_string)
-def test_lastName_types(_, value):
+def test_lastName_invalid_types(_, value):
     test_dao = DAO('user')
     test_user = {
         'firstName': 'Hasse',
@@ -112,7 +112,7 @@ def test_lastName_types(_, value):
     assert exc_info.type == WriteError
 
 @pytest.mark.parametrize("_, value", types_except_string)
-def test_email_types(_, value):
+def test_email_invalid_types(_, value):
     test_dao = DAO('user')
     test_user = {
         'firstName': 'Hasse',
@@ -126,7 +126,7 @@ def test_email_types(_, value):
 types_except_objectId = [item for item in types.items() if item[0] != 'objectId']
 
 @pytest.mark.parametrize("_, value", types_except_objectId)
-def test_tasks_types(_, value):
+def test_tasks_invalid_types(_, value):
     test_dao = DAO('user')
     test_user = {
         'firstName': 'Hasse',

@@ -3,11 +3,6 @@ from src.util.dao import DAO
 from pymongo.errors import WriteError
 from utils import setup_teardown, types
 
-# testa valid
-# testa utan required
-# testa types
-# testa om unique
-
 def test_create_valid_todo():
     test_dao = DAO('todo')
     test_todo = {
