@@ -53,10 +53,11 @@ def test_create_invalid_user_no_last_name():
         test_dao.create(test_user)
     assert exc_info.type == WriteError
 
-def test_create_invalid_user_no_last_name():
+def test_create_invalid_user_no_email():
     test_dao = DAO('user')
     test_user = {
         'firstName': 'Hasse',
+        'lastName': 'Aro'
     }
     with pytest.raises(Exception) as exc_info:
         test_dao.create(test_user)
