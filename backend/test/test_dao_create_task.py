@@ -11,7 +11,7 @@ def test_create_valid_task():
     test_dao = DAO('task')
     test_task = {
         'title': 'Important task!',
-        'description': 'Very important!',
+        'description': 'Very important!'
     }
     res = test_dao.create(test_task)
     assert isinstance(res, dict)
@@ -63,7 +63,7 @@ def test_create_task_not_unique():
     test_task = {
         'title': 'Important task!',
         'description': 'Very Important!',
-        'email': 'Very Important!@tv3.se'
+        'email': 'Very_Important!@tv3.se'
     }
     res = test_dao.create(test_task)
     assert isinstance(res, dict)
@@ -72,7 +72,7 @@ def test_create_task_not_unique():
 
     second_task = {
         'title': 'Important task!',
-        'description': 'But not as important as another',
+        'description': 'Not as important',
     }
 
     with pytest.raises(Exception) as exc_info:
@@ -87,7 +87,6 @@ def test_title_invalid_types(_, value):
     test_task = {
         'title': value
     }
-    test_task['title'] = value
     with pytest.raises(Exception) as exc_info:
         test_dao.create(test_task)
     assert exc_info.type == WriteError
@@ -157,7 +156,7 @@ def test_todos_invalid_types(_, value):
     test_task = {
         'title': 'Important task!',
     }
-    test_task['requires'] = [value]
+    test_task['todos'] = [value]
     with pytest.raises(Exception) as exc_info:
         test_dao.create(test_task)
     assert exc_info.type == WriteError
@@ -168,7 +167,7 @@ def test_video_invalid_types(_, value):
     test_task = {
         'title': 'Important task!',
     }
-    test_task['requires'] = value
+    test_task['video'] = value
     with pytest.raises(Exception) as exc_info:
         test_dao.create(test_task)
     assert exc_info.type == WriteError
