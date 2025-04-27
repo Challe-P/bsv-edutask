@@ -63,7 +63,6 @@ def test_create_task_not_unique():
     test_task = {
         'title': 'Important task!',
         'description': 'Very Important!',
-        'email': 'Very_Important!@tv3.se'
     }
     res = test_dao.create(test_task)
     assert isinstance(res, dict)
@@ -103,7 +102,7 @@ def test_description_invalid_types(_, value):
     assert exc_info.type == WriteError
 
 @pytest.mark.parametrize("_, value", types_except_string)
-def test_video_invalid_types(_, value):
+def test_categories_invalid_types(_, value):
     test_dao = DAO('task')
     test_task = {
         'title': 'Important task!',
@@ -127,7 +126,7 @@ def test_startdate_invalid_types(_, value):
     assert exc_info.type == WriteError
 
 @pytest.mark.parametrize("_, value", types_except_date)
-def test_startdate_invalid_types(_, value):
+def test_duedate_invalid_types(_, value):
     test_dao = DAO('task')
     test_task = {
         'title': 'Important task!',
