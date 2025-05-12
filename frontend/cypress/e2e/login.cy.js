@@ -81,7 +81,7 @@ describe('Logging into the system - no user account', () => {
     cy.get('form')
       .submit()
 
-    // assert that the user is now logged in
+    // assert that the user is not logged in
     cy.get('h1')
       .should('contain.text', 'Login')
   })
