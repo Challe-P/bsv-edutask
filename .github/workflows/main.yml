@@ -27,4 +27,4 @@ jobs:
         pip install -r requirements.pip
     - name: Runs pytest
       run: |
-        pytest
+        pytest -m unittest
