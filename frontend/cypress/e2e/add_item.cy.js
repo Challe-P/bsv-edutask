@@ -3,6 +3,7 @@ describe('Add item to todo list', () => {
   let uid // user id
   let name // name of the user (firstName + ' ' + lastName)
   let email // email of the user
+  let backend_port = 5001;
 
   before(function () {
     // create a fabricated user from a fixture
@@ -10,7 +11,7 @@ describe('Add item to todo list', () => {
       .then((user) => {
         cy.request({
           method: 'POST',
-          url: 'http://localhost:5000/users/create',
+          url: `http://localhost:${backend_port}/users/create`,
           form: true,
           body: user
         }).then((response) => {
@@ -21,6 +22,7 @@ describe('Add item to todo list', () => {
         })
     })
 
+
   })
 
   beforeEach(function () {
@@ -28,40 +30,53 @@ describe('Add item to todo list', () => {
     cy.visit('http://localhost:3000')
   })
 
-  it('starting out on the landing screen', () => {
-    // make sure the landing page contains a header with "login"
-    cy.get('h1')
-      .should('contain.text', 'Login')
-  })
+  it('create a task', () => {
+    const data = {
+      userid: uid,
+      title: "Test task",
+      description: "description",
+      url: "Sl6en1NPTYM",
+      todos: "Watch video"
+    }
 
-  it('login to the system with an existing account', () => {
-
-    const data = new URLSearchParams();
-      data.append('title', 'Test task');
-      data.append('description', '(add a description here)');
-      data.append('userid', uid);
-        
     cy.request({
         method: 'POST',
-        url: 'http://localhost:5000/tasks/create',
-        body: "apa"
+        url: `http://localhost:${backend_port}/tasks/create`,
+        form: true,
+        body: data
       }).then((response) => {
         console.log(response)
       })
+  })
+
+  it('login to the system with the account', () => {
+    // detect a div which contains "Email Address", find the input and type (in a declarative way)
+    cy.contains('div', 'Email Address')
+      .find('input[type=text]')
+      .type(email)
+    // alternative, imperative way of detecting that input field
+    //cy.get('.inputwrapper #email')
+    //    .type(email)
+
+    // submit the form on this page
+    cy.get('form')
+      .submit()
+
+    // TODO assert task exists
   })
 
   after(function () {
     // clean up by deleting the user from the database
     cy.request({
       method: 'DELETE',
-      url: `http://localhost:5000/users/${uid}`
+      url: `http://localhost:${backend_port}/users/${uid}`
     }).then((response) => {
       cy.log(response.body)
     })
     // clean up by deleting the task from the database
     cy.request({
       method: 'DELETE',
-      url: `http://localhost:5000/tasks/byid/${uid}`
+      url: `http://localhost:${backend_port}/tasks/byid/${uid}`
     }).then((response) => {
       cy.log(response.body)
     })
