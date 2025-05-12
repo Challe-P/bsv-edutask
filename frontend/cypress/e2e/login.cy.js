@@ -3,6 +3,7 @@ describe('Logging into the system', () => {
   let uid // user id
   let name // name of the user (firstName + ' ' + lastName)
   let email // email of the user
+  let backend_port = Cypress.env('backend_port');
 
   before(function () {
     // create a fabricated user from a fixture
@@ -10,7 +11,7 @@ describe('Logging into the system', () => {
       .then((user) => {
         cy.request({
           method: 'POST',
-          url: 'http://localhost:5001/users/create',
+          url: `http://localhost:${backend_port}/users/create`,
           form: true,
           body: user
         }).then((response) => {
@@ -54,7 +55,7 @@ describe('Logging into the system', () => {
     // clean up by deleting the user from the database
     cy.request({
       method: 'DELETE',
-      url: `http://localhost:5001/users/${uid}`
+      url: `http://localhost:${backend_port}/users/${uid}`
     }).then((response) => {
       cy.log(response.body)
     })

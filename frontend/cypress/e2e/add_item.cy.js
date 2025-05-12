@@ -3,7 +3,7 @@ describe('Add item to todo list', () => {
   let uid // user id
   let name // name of the user (firstName + ' ' + lastName)
   let email // email of the user
-  let backend_port = 5001;
+  let backend_port = Cypress.env('backend_port');
 
   before(function () {
     // create a fabricated user from a fixture
