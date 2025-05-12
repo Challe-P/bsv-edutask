@@ -60,3 +60,29 @@ describe('Logging into the system', () => {
     })
   })
 })
+
+describe('Logging into the system - no user account', () => {
+  beforeEach(function () {
+    // enter the main main page
+    cy.visit('http://localhost:3000')
+  })
+
+  it('starting out on the landing screen', () => {
+    // make sure the landing page contains a header with "login"
+    cy.get('h1')
+      .should('contain.text', 'Login')
+  })
+
+  it('login to the system without an account', () => {
+    cy.contains('div', 'Email Address')
+      .find('input[type=text]')
+      .type('cooljohn@cool.com')
+    // submit the form on this page
+    cy.get('form')
+      .submit()
+
+    // assert that the user is now logged in
+    cy.get('h1')
+      .should('contain.text', 'Login')
+  })
+})
