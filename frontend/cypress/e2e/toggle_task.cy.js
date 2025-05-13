@@ -1,6 +1,6 @@
-// Test case R8UC1
+// Test case R8UC2
 
-describe('Add item to todo list', () => {
+describe('Toggle todo for task', () => {
   // define variables that we need on multiple occasions
   let uid // user id
   let email // email of the user
@@ -76,36 +76,39 @@ describe('Add item to todo list', () => {
     cy.get('.todo-item')
       .should('be.visible')
 
-    cy.get('.checker')
+    cy.contains('span.editable', 'Watch video')
+      .closest('.todo-item')
+      .find('.checker')
       .should('have.class', 'unchecked')
 
-    cy.get('.todo-item').get('.editable')
+    cy.contains('span.editable', 'Watch video')
       .should('have.css', 'text-decoration')
       .should('not.include', 'line-through')
 
-    cy.get('.checker')
+    cy.contains('span.editable', 'Watch video')
+      .closest('.todo-item')
+      .find('.checker')
       .click()
-    
-    cy.get('.checker')
+
+    cy.contains('span.editable', 'Watch video')
+      .closest('.todo-item')
+      .find('.checker')
       .should('have.class', 'checked')
 
-    cy.get('.todo-item').find('.editable')
+    cy.contains('span.editable', 'Watch video')
       .should('have.css', 'text-decoration')
       .should('include', 'line-through')
   })
 
-  it('toggle task from done to active', () => {
-    //    data.append('data', `{'$set': {'done': ${!todo.done}}}`);
+  it('toggle todo from done to active', () => {
+    const data = {
+      data: JSON.stringify({
+        $set: {
+          done: true
+        }
+      })
+    };
 
-  const data = {
-    data: JSON.stringify({
-      $set: {
-        done: true
-      }
-    })
-  };
-
-    
     cy.request({
       method: 'PUT',
       url: `http://localhost:${backend_port}/todos/byid/${todoid}`,
@@ -133,23 +136,28 @@ describe('Add item to todo list', () => {
     cy.get('.todo-item')
       .should('be.visible')
 
-    cy.get('.checker')
+    cy.contains('span.editable', 'Watch video')
+      .closest('.todo-item')
+      .find('.checker')
       .should('have.class', 'checked')
 
-    cy.get('.todo-item').find('.editable')
+    cy.contains('span.editable', 'Watch video')
       .should('have.css', 'text-decoration')
       .should('include', 'line-through')
-
-    cy.get('.checker')
-      .click()
     
-    cy.get('.checker')
+    cy.contains('span.editable', 'Watch video')
+      .closest('.todo-item')
+      .find('.checker')
+      .click()
+
+    cy.contains('span.editable', 'Watch video')
+      .closest('.todo-item')
+      .find('.checker')
       .should('have.class', 'unchecked')
 
-    cy.get('.todo-item').get('.editable')
+    cy.contains('span.editable', 'Watch video')
       .should('have.css', 'text-decoration')
       .should('not.include', 'line-through')
-
   })
 
 

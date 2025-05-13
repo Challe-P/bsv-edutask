@@ -1,4 +1,4 @@
-// Test case R8UC2
+// Test case R8UC3
 
 describe('Remove item to todo list', () => {
   // define variables that we need on multiple occasions
@@ -73,12 +73,12 @@ describe('Remove item to todo list', () => {
     cy.get('img')
       .click()
 
-    cy.contains('span.editable', 'New todo')
+    cy.contains('span.editable', 'Watch video')
       .closest('.todo-item')
       .find('.remover')
       .click()
 
-    cy.contains('span.editable', 'New todo')
+    cy.contains('span.editable', 'Watch video')
       .closest('.todo-item')
       .should('not.exist')
   })
