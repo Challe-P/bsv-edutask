@@ -3,9 +3,9 @@
 describe('Add item to todo list', () => {
   // define variables that we need on multiple occasions
   let uid // user id
-  let name // name of the user (firstName + ' ' + lastName)
   let email // email of the user
   let taskid // task id
+  let todoid // todo id
   let backend_port = Cypress.env('backend_port');
 
   before(function () {
@@ -42,7 +42,8 @@ describe('Add item to todo list', () => {
         body: data
       }).then((response) => {
         console.log(response)
-        taskid = response.body[0]._id.$oid    
+        taskid = response.body[0]._id.$oid
+        todoid = response.body[0].todos[0]._id.$oid
       })
   })
 
@@ -55,14 +56,13 @@ describe('Add item to todo list', () => {
     })
   })
 
-  it('add new task', () => {
+  it('toggle task from active to done', () => {
     cy.visit('http://localhost:3000')
-    // detect a div which contains "Email Address", find the input and type (in a declarative way)
+
     cy.contains('div', 'Email Address')
       .find('input[type=text]')
       .type(email)
 
-    // submit the form on this page
     cy.get('form')
       .submit()
 
@@ -73,52 +73,53 @@ describe('Add item to todo list', () => {
     cy.get('img')
       .click()
 
-    cy.get('input[placeholder=\"Add a new todo item\"]')
-      .type('New todo')
-
-    // Assert add button active and click
-    cy.contains('Add')
-      .should('not.be.disabled')
-      .click()
-
-    // Assert new todo is added
-    cy.contains('New todo').should('be.visible')
-  })
-
-
-  it('assert add button is disabled', () => {
-    cy.visit('http://localhost:3000')
-    // detect a div which contains "Email Address", find the input and type (in a declarative way)
-    cy.contains('div', 'Email Address')
-      .find('input[type=text]')
-      .type(email)
-
-    // submit the form on this page
-    cy.get('form')
-      .submit()
-
-    // assert task exists
-    cy.get('.title-overlay')
-      .should('contain.text', 'Important task')
-
-    cy.get('img')
-      .click()
-
-    cy.get('input[placeholder=\"Add a new todo item\"]')
+    cy.get('.todo-item')
       .should('be.visible')
-    // Assert add button disabled
-    cy.contains('Add')
-      .should('be.disabled')
+
+    cy.get('.checker')
+      .should('have.class', 'unchecked')
+
+    cy.get('.todo-item').get('.editable')
+      .should('have.css', 'text-decoration')
+      .should('not.include', 'line-through')
+
+    cy.get('.checker')
+      .click()
+    
+    cy.get('.checker')
+      .should('have.class', 'checked')
+
+    cy.get('.todo-item').find('.editable')
+      .should('have.css', 'text-decoration')
+      .should('include', 'line-through')
   })
 
-    it('assert add button is active', () => {
+  it('toggle task from done to active', () => {
+    //    data.append('data', `{'$set': {'done': ${!todo.done}}}`);
+
+  const data = {
+    data: JSON.stringify({
+      $set: {
+        done: true
+      }
+    })
+  };
+
+    
+    cy.request({
+      method: 'PUT',
+      url: `http://localhost:${backend_port}/todos/byid/${todoid}`,
+      form: true,
+      body: data
+      }).then((response) => {
+        console.log(response)
+      })
     cy.visit('http://localhost:3000')
-    // detect a div which contains "Email Address", find the input and type (in a declarative way)
+
     cy.contains('div', 'Email Address')
       .find('input[type=text]')
       .type(email)
 
-    // submit the form on this page
     cy.get('form')
       .submit()
 
@@ -126,15 +127,31 @@ describe('Add item to todo list', () => {
     cy.get('.title-overlay')
       .should('contain.text', 'Important task')
 
-    cy.get('img')
+    cy.get('.done-check')
       .click()
 
-    cy.get('input[placeholder=\"Add a new todo item\"]')
-      .type('New task')
-    // Assert add button active
-    cy.contains('Add')
-      .should('not.be.disabled')
+    cy.get('.todo-item')
+      .should('be.visible')
+
+    cy.get('.checker')
+      .should('have.class', 'checked')
+
+    cy.get('.todo-item').find('.editable')
+      .should('have.css', 'text-decoration')
+      .should('include', 'line-through')
+
+    cy.get('.checker')
+      .click()
+    
+    cy.get('.checker')
+      .should('have.class', 'unchecked')
+
+    cy.get('.todo-item').get('.editable')
+      .should('have.css', 'text-decoration')
+      .should('not.include', 'line-through')
+
   })
+
 
   after(function () {
     // clean up by deleting the user from the database
