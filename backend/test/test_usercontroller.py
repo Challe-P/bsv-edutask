@@ -50,7 +50,7 @@ def test_get_user_db_failure():
 @pytest.mark.unittest
 @pytest.mark.parametrize('email', ['example@test.com', 'common.format@test.com', 'FirstName.LastName@TestTest.com', 
     'x@test.com', 'long-local-with-hyphens@and.subdomains.com', 'some.name+tag+tag@test.com',
-    'sur/name@test.com', 'admin@test', '" "@test.com', '"very.(),:;<>[]\".VERY.\"very@\\ \"very\".strange"@unusual.test.com'])
+    'sur/name@test.com', 'admin@test', '" "@test.com', '\"very.(),:;<>[]\\\".VERY.\\\"very@\\\\ \\\"very\\\".strange\"@unusual.test.com'])
 def test_valid_email(email):
     expected_result = {'id': 'user1', 'email': email}
     mocked_db = mock.MagicMock()
