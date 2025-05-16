@@ -12,14 +12,21 @@ def test_get_user_by_email_valid_unique():
     assert res == expected_result
 
 @pytest.mark.unittest
-def test_get_user_by_email_valid_not_unique(capfd):
+def test_get_user_by_email_valid_not_unique_assert_print(capfd):
+    mocked_db = mock.MagicMock()
+    mocked_db.find.return_value = [{'id': 'user1', 'email': 'not_unique@test.com'}, {'id': 'user2', 'email': 'not_unique@test.com'}]
+    controller = UserController(dao=mocked_db)
+    controller.get_user_by_email('not_unique@test.com')
+    captured = capfd.readouterr()
+    assert captured.out == 'Error: more than one user found with mail not_unique@test.com\n'
+
+@pytest.mark.unittest
+def test_get_user_by_email_valid_not_unique_assert_result():
     expected_result = {'id': 'user1', 'email': 'not_unique@test.com'}
     mocked_db = mock.MagicMock()
     mocked_db.find.return_value = [{'id': 'user1', 'email': 'not_unique@test.com'}, {'id': 'user2', 'email': 'not_unique@test.com'}]
     controller = UserController(dao=mocked_db)
     res = controller.get_user_by_email('not_unique@test.com')
-    captured = capfd.readouterr()
-    assert captured.out == 'Error: more than one user found with mail not_unique@test.com\n'
     assert res == expected_result
 
 @pytest.mark.unittest
